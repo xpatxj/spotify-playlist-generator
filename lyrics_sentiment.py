@@ -10,13 +10,12 @@ genius = lyricsgenius.Genius('g_access_token')
 sentiments = []
 recommendation_final_playlist = {}
 a, b, c = [], [], []
-
 # do sentiment analysis on song
 def analyze_sentiment(name, artist):
     try:
         lyrics = genius.search_song(name, artist).lyrics
-        is_english = TextBlob(lyrics).detect_language()
-        if is_english != 'en':
+        is_english = GoogleTranslator.detect(lyrics)
+        if is_english != 'english':
             t_lyrics = GoogleTranslator(source='auto', target='english').translate(lyrics)
             blob = TextBlob(t_lyrics)
         else:
