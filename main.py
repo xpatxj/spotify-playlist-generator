@@ -17,7 +17,6 @@ playlist_url = playlist_url.split('?')[0]
 playlist_id = playlist_url.split('/')[-1]
 
 tracks = sp.playlist_tracks(playlist_id)
-
 tracks_info = {}
 track_ids = [track['track']['id'] for track in tracks['items']]
 
