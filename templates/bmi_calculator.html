@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kalkulator BMI</title>
+</head>
+<body>
+    <form method="POST">
+        Waga (kg): <input type="number" name="weight" step="0.1"><br>
+        Wzrost (cm): <input type="number" name="height" step="0.1"><br>
+        <input type="submit" value="Oblicz BMI">
+    </form>
+    {% if bmi %}
+        <p>Twoje BMI wynosi: {{ bmi }}</p>
+    {% endif %}
+</body>
+</html>
