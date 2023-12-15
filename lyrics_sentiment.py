@@ -1,7 +1,7 @@
 from textblob import TextBlob
 import lyricsgenius
 from deep_translator import GoogleTranslator
-# from main import sp
+
 from collections import Counter
 from config import g_access_token
 
@@ -52,7 +52,11 @@ def get_playlist_recommendations(list_of_songs, sp):
     for name, artist in list_of_songs.items():
         if len(recommendation_final_playlist) == 10:
             break
-        s = round(analyze_sentiment(name, artist), 1)
+        a = analyze_sentiment(name, artist)
+        try:
+            s = round(a, 1)
+        except TypeError:
+            pass
         if s is not None and (s == c[0][0] or s == c[1][0] or s == c[2][0]):
             search = sp.search(q='track:' + name + ' artist:' + artist, type='track')
             try:
