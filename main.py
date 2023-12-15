@@ -40,7 +40,7 @@ for r_id in recommendations_ids:
     artists = ', '.join([artist['name'] for artist in track['artists']])
     recommendations_info[track['name']] = artists
 
-get_playlist_recommendations(recommendations_info)
+get_playlist_recommendations(recommendations_info, sp)
 print(recommendations_info)
 print(recommendation_final_playlist)
 

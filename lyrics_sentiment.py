@@ -1,7 +1,7 @@
 from textblob import TextBlob
 import lyricsgenius
 from deep_translator import GoogleTranslator
-
+# from main import sp
 from collections import Counter
 from config import g_access_token
 
@@ -47,14 +47,22 @@ def get_playlist(list_of_songs):
 
 
 # give recommendations based on sentiment analysis
-def get_playlist_recommendations(list_of_songs):
+def get_playlist_recommendations(list_of_songs, sp):
     c = get_most_popular()
     for name, artist in list_of_songs.items():
+        if len(recommendation_final_playlist) == 10:
+            break
         s = round(analyze_sentiment(name, artist), 1)
         if s is not None and (s == c[0][0] or s == c[1][0] or s == c[2][0]):
-            recommendation_final_playlist[name] = artist
-            print(s)
-        elif len(recommendation_final_playlist) >= 10:
+            search = sp.search(q='track:' + name + ' artist:' + artist, type='track')
+            try:
+                search['tracks']['items'][0]['id']
+                recommendation_final_playlist[name] = artist
+                print(s)
+                print(len(recommendation_final_playlist))
+            except IndexError:
+                pass
+        elif len(recommendation_final_playlist) == 10:
             break
         else:
             pass
