@@ -110,8 +110,6 @@ def option_two(playlist_id, track_ids, option):
               death metal has high energy, while a Bach prelude scores low on the scale. Perceptual 
               features contributing to this attribute include dynamic range, perceived loudness, timbre, 
               onset rate, and general entropy""")
-    
-    # color = get_dominant_color(user_info['images'][0]['url'])
 
     import numpy as np
 
