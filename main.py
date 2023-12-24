@@ -1,8 +1,9 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from config import s_client_id, s_client_secret, redirect_uri, playlist_url
+from config import s_client_id, s_client_secret, redirect_uri, playlist_urll
 from lyrics_sentiment import get_playlist, get_most_popular, get_playlist_recommendations, recommendation_final_playlist
 import matplotlib.pyplot as plt
+import re
 
 scope = 'playlist-read-private playlist-modify-public'
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=s_client_id, client_secret=s_client_secret, redirect_uri=redirect_uri, scope=scope))
@@ -10,22 +11,33 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=s_client_id, client_sec
 user_info = sp.current_user()
 user_id = user_info['id']
 
-# playlist_url = input("Please enter URL of playlist: ")
-chose = input("""Choose an option: 1. 10 new tracks recommendation based on playlist's songs' sentiment analysis.
-      2. Chart based on your playlist: BPM, velance, energy.
-      3. Choose your zodiac sign and we'll made a playlist for you based on your favorite playlist! 
-        Warning: it's highly stereotipical and might be not accurate at all.""")
+# playlist_urll = input("Please enter URL of playlist: ")
+chose = input("""Choose an option: 
+            1. 10 new tracks recommendation based on playlist's songs' lyrics' sentiment analysis.
+            2. Chart based on your playlist: BPM, velance, energy.
+            3. Choose your zodiac sign and we'll made a playlist for you based on your favorite playlist! 
+            Warning: it's highly stereotipical and might be not accurate at all.\n""")
+
+def is_valid_spotify_url(url):
+    pattern = r"https://open\.spotify\.com/playlist/[a-zA-Z0-9]+(\?si=[a-zA-Z0-9]+)?"
+    match = re.match(pattern, url)
+    return match is not None
 
 def get_ids():
 
-    playlist_url = playlist_url.split('?')[0]
-    playlist_id = playlist_url.split('/')[-1]
+    if is_valid_spotify_url(playlist_urll) == True:
+        playlist_url = playlist_urll.split('?')[0]
+        playlist_id = playlist_url.split('/')[-1]
 
-    tracks = sp.playlist_tracks(playlist_id)
+        tracks = sp.playlist_tracks(playlist_id)
+        
+        track_ids = [track['track']['id'] for track in tracks['items']]
+
+        return playlist_id, track_ids
+    else:
+        print("Invalid URL")
+        exit()
     
-    track_ids = [track['track']['id'] for track in tracks['items']]
-
-    return playlist_id, track_ids
 
 def option_one(track_ids):
 
@@ -51,8 +63,8 @@ def option_one(track_ids):
         recommendations_info[track['name']] = artists
 
     get_playlist_recommendations(recommendations_info, sp)
-    print(recommendations_info)
-    print(recommendation_final_playlist)
+    # print(recommendations_info)
+    # print(recommendation_final_playlist)
 
     name = input("Please enter name of playlist: ")
     new_playlist = sp.user_playlist_create(user=user_id, name=name, public=True, description='recommended songs based on playlist')
@@ -70,23 +82,23 @@ def option_two(playlist_id, track_ids, option):
     
     features = []
     name_of_feature = ''
-    if option == 'bpm':
+    if option == '1':
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
-            features.append(audio_features['tempo'])
-            name_of_feature = 'BPM'
+            features.append(round(audio_features['tempo']))
+        name_of_feature = 'BPM'
     
-    if option == 'valence':
+    if option == '2':
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
             features.append(audio_features['valence'])
-            name_of_feature = 'Valence'
+        name_of_feature = 'Valence'
 
-    if option == 'energy':
+    if option == '3':
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
             features.append(audio_features['energy'])
-            name_of_feature = 'Energy'
+        name_of_feature = 'Energy'
     
     color = get_dominant_color(user_info['images'][0]['url'])
 
@@ -113,14 +125,17 @@ def get_dominant_color(url):
 
     dominant_color = img.getpixel((0, 0))
 
-    return dominant_color
+    color = '#{:02x}{:02x}{:02x}'.format(*dominant_color)
+
+    return color
 
 if chose == '1':
     playlist_id, track_ids = get_ids()
     option_one(track_ids)
+
 elif chose == '2':
     playlist_id, track_ids = get_ids()
-    option = input("Choose an option: 1. BPM 2. Valence 3. Energy. \nType the number of option:")
+    option = input("Choose an option: 1. BPM 2. Valence 3. Energy. \nType the number of option: ")
     option_two(playlist_id, track_ids, option)
 
 elif chose == '3':
