@@ -88,7 +88,7 @@ def option_two(playlist_id, track_ids, option):
     if option == '1':
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
-            features.append(round(audio_features['tempo']))
+            features.append(audio_features['tempo'])
         name_of_feature = 'BPM'
     
     if option == '2':
@@ -97,8 +97,8 @@ def option_two(playlist_id, track_ids, option):
             features.append(audio_features['valence'])
         name_of_feature = 'valence'
         print("""Valence is a measure describing the musical positiveness conveyed by a track. 
-              Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with 
-              low valence sound more negative (e.g. sad, depressed, angry)""")
+        Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with 
+        low valence sound more negative (e.g. sad, depressed, angry)""")
 
     if option == '3':
         for track_id in track_ids:
@@ -106,10 +106,10 @@ def option_two(playlist_id, track_ids, option):
             features.append(audio_features['energy'])
         name_of_feature = 'energy'
         print("""Energy is a measure that represents a perceptual measure of intensity 
-              and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, 
-              death metal has high energy, while a Bach prelude scores low on the scale. Perceptual 
-              features contributing to this attribute include dynamic range, perceived loudness, timbre, 
-              onset rate, and general entropy""")
+        and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, 
+        death metal has high energy, while a Bach prelude scores low on the scale. Perceptual 
+        features contributing to this attribute include dynamic range, perceived loudness, timbre, 
+        onset rate, and general entropy""")
 
     import numpy as np
 
