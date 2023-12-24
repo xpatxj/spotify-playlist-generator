@@ -16,9 +16,6 @@ chose = input("""Choose an option: 1. 10 new tracks recommendation based on play
       3. Choose your zodiac sign and we'll made a playlist for you based on your favorite playlist! 
         Warning: it's highly stereotipical and might be not accurate at all.""")
 
-
-
-
 def get_ids():
 
     playlist_url = playlist_url.split('?')[0]
