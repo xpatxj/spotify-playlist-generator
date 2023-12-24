@@ -42,7 +42,11 @@ def analyze_sentiment(name, artist):
 # get playlist and do sentiment analysis on each song
 def get_playlist(list_of_songs):
     for name, artist in list_of_songs.items():
-        sentiments.append(round(analyze_sentiment(name, artist), 1))
+        try:
+            sentiments.append(round(analyze_sentiment(name, artist), 1))
+        except TypeError:
+            pass
+        
     return sentiments
 
 
