@@ -14,9 +14,7 @@ user_id = user_info['id']
 # playlist_urll = input("Please enter URL of playlist: ")
 chose = input("""Choose an option: 
             1. 10 new tracks recommendation based on playlist's songs' lyrics' sentiment analysis.
-            2. Chart based on your playlist: BPM, velance, energy.
-            3. Choose your zodiac sign and we'll made a playlist for you based on your favorite playlist! 
-            Warning: it's highly stereotipical and might be not accurate at all.\n""")
+            2. Chart based on your playlist: BPM, velance, energy.\n""")
 
 def is_valid_spotify_url(url):
     pattern = r"https://open\.spotify\.com/playlist/[a-zA-Z0-9]+(\?si=[a-zA-Z0-9]+)?"
@@ -109,8 +107,8 @@ def option_two(playlist_id, track_ids, option):
 
     plt.show()
 
-def option_three():
-    print("option three")
+# def option_three():
+#     print("option three")
 
 def get_dominant_color(url):
 
@@ -138,5 +136,5 @@ elif chose == '2':
     option = input("Choose an option: 1. BPM 2. Valence 3. Energy. \nType the number of option: ")
     option_two(playlist_id, track_ids, option)
 
-elif chose == '3':
-    option_three()
+# elif chose == '3':
+#     option_three()
