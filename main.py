@@ -96,12 +96,20 @@ def option_two(track_ids, option):
             audio_features = sp.audio_features([track_id])[0]
             features.append(audio_features['valence'])
         name_of_feature = 'valence'
+        print("""Valence is a measure describing the musical positiveness conveyed by a track. 
+              Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with 
+              low valence sound more negative (e.g. sad, depressed, angry)""")
 
     if option == '3':
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
             features.append(audio_features['energy'])
         name_of_feature = 'energy'
+        print("""Energy is a measure that represents a perceptual measure of intensity 
+              and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, 
+              death metal has high energy, while a Bach prelude scores low on the scale. Perceptual 
+              features contributing to this attribute include dynamic range, perceived loudness, timbre, 
+              onset rate, and general entropy""")
     
     color = get_dominant_color(user_info['images'][0]['url'])
 
@@ -114,9 +122,6 @@ def option_two(track_ids, option):
     plt.ylabel('count')
 
     plt.show()
-
-# def option_three():
-#     print("option three")
 
 def get_dominant_color(url):
 
@@ -154,6 +159,3 @@ elif chose == '2':
 else:
     print("Invalid option. Please choose 1 or 2.")
     exit()
-
-# elif chose == '3':
-#     option_three()
