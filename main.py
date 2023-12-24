@@ -49,10 +49,10 @@ def option_one(track_ids):
         artists = ', '.join([artist['name'] for artist in track['artists']])
         tracks_info[track['name']] = artists
 
-    print(tracks_info)
+    # print(tracks_info)
     get_playlist(tracks_info)
     get_most_popular()
-    print(get_most_popular())
+    # print(get_most_popular())
 
     seed_tracks = track_ids[:5]
     recommendations = sp.recommendations(seed_tracks=seed_tracks, limit=30)
@@ -65,8 +65,8 @@ def option_one(track_ids):
         recommendations_info[track['name']] = artists
 
     get_playlist_recommendations(recommendations_info, sp)
-    print(recommendations_info)
-    print(recommendation_final_playlist)
+    # print(recommendations_info)
+    # print(recommendation_final_playlist)
 
     name = input("Please enter name of playlist: ")
     new_playlist = sp.user_playlist_create(user=user_id, name=name, public=True, description='recommended songs based on playlist')
@@ -105,7 +105,10 @@ def option_two(track_ids, option):
     
     color = get_dominant_color(user_info['images'][0]['url'])
 
-    plt.hist(features, bins=range(min(features), max(features) + 4, 4), color=color, edgecolor='black')
+    import numpy as np
+
+    bins = np.arange(min(features), max(features), 0.1)
+    plt.hist(features, bins=bins, color=color, edgecolor='black')
 
     plt.xlabel(name_of_feature)
     plt.ylabel('count')
