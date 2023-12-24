@@ -88,8 +88,11 @@ def option_two(playlist_id, track_ids, option):
     if option == '1':
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
-            features.append(audio_features['tempo'])
+            features.append(round(audio_features['tempo']))
         name_of_feature = 'BPM'
+        print("""The overall estimated tempo of a track in beats per minute (BPM). 
+        In musical terminology, tempo is the speed or pace of a given piece and derives directly 
+        from the average beat duration.""")
     
     if option == '2':
         for track_id in track_ids:
@@ -116,11 +119,17 @@ def option_two(playlist_id, track_ids, option):
     image_url = sp.playlist(playlist_id)['images'][0]['url']
 
     colors = get_dominant_colors(image_url)
+    
+    if option == '1':
+        bins = range(min(features), max(features), 1)
 
-    bins = np.arange(min(features), max(features), 0.1)
+        for i in range(len(bins)-1):
+            plt.hist([f for f in features if bins[i] <= f < bins[i+1]], bins=[bins[i], bins[i+1]], color=colors[i%len(colors)], edgecolor='black')
+    else:
+        bins = np.arange(min(features), max(features), 0.1)
 
-    for i in range(len(bins)-1):
-        plt.hist(features, bins=bins[i:i+2], color=colors[i%len(colors)], edgecolor='black')
+        for i in range(len(bins)-1):
+            plt.hist(features, bins=bins[i:i+2], color=colors[i%len(colors)], edgecolor='black')
 
     plt.xlabel(name_of_feature)
     plt.ylabel('count')
