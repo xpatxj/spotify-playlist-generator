@@ -35,7 +35,7 @@ def get_ids():
             print("No tracks found. Please make sure playlist is not empty.")
             exit()
         else:
-            return track_ids
+            return playlist_id, track_ids
     else:
         print("Invalid URL. Please make sure URL looks like this: https://open.spotify.com/playlist/[id]?si=[random_string]")
         exit()
@@ -80,7 +80,7 @@ def option_one(track_ids):
         except IndexError:
             print("Index error")
 
-def option_two(track_ids, option):
+def option_two(playlist_id, track_ids, option):
     
     features = []
     name_of_feature = ''
@@ -111,48 +111,63 @@ def option_two(track_ids, option):
               features contributing to this attribute include dynamic range, perceived loudness, timbre, 
               onset rate, and general entropy""")
     
-    color = get_dominant_color(user_info['images'][0]['url'])
+    # color = get_dominant_color(user_info['images'][0]['url'])
 
     import numpy as np
 
+    playlist = sp.playlist(playlist_id)
+
+    image_url = playlist['images'][0]['url']
+
+    colors = get_dominant_colors(image_url)
+
     bins = np.arange(min(features), max(features), 0.1)
-    plt.hist(features, bins=bins, color=color, edgecolor='black')
+
+    for i in range(len(bins)-1):
+        plt.hist(features, bins=bins[i:i+2], color=colors[i%len(colors)], edgecolor='black')
 
     plt.xlabel(name_of_feature)
     plt.ylabel('count')
 
     plt.show()
 
-def get_dominant_color(url):
+def get_dominant_colors(url):
 
     from PIL import Image
     import requests
     from io import BytesIO
+    from sklearn.cluster import KMeans
+    import numpy as np
 
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
+    img = img.resize((50, 50)) 
+    pixels = np.array(img).reshape(-1, 3)
 
-    img = img.resize((1, 1))
+    n_colors = 3
+    kmeans = KMeans(n_clusters=n_colors)  
+    kmeans.fit(pixels)
 
-    dominant_color = img.getpixel((0, 0))
+    counts = np.bincount(kmeans.labels_)
+    sorted_colors = kmeans.cluster_centers_[np.argsort(-counts)]
 
-    color = '#{:02x}{:02x}{:02x}'.format(*dominant_color)
+    colors = ['#{:02x}{:02x}{:02x}'.format(int(color[0]), int(color[1]), int(color[2])) for color in sorted_colors]
 
-    return color
+    return colors
 
 if chose == '1':
-    track_ids = get_ids()
+    playlist_id, track_ids = get_ids()
     option_one(track_ids)
 
 elif chose == '2':
-    track_ids = get_ids()
+    playlist_id, track_ids = get_ids()
     option = input("Choose an option: 1. BPM 2. Valence 3. Energy. \nType the number of option: ")
 
     pattern = r"^[123]$"
     match = re.match(pattern, option)
 
     if match is not None:
-        option_two(track_ids, option)
+        option_two(playlist_id, track_ids, option)
     else:
         print("Invalid option. Please choose 1, 2 or 3.")
         exit()
