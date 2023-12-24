@@ -65,8 +65,8 @@ def option_one(track_ids):
         recommendations_info[track['name']] = artists
 
     get_playlist_recommendations(recommendations_info, sp)
-    # print(recommendations_info)
-    # print(recommendation_final_playlist)
+    print(recommendations_info)
+    print(recommendation_final_playlist)
 
     name = input("Please enter name of playlist: ")
     new_playlist = sp.user_playlist_create(user=user_id, name=name, public=True, description='recommended songs based on playlist')
