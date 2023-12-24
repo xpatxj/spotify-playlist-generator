@@ -139,7 +139,18 @@ if chose == '1':
 elif chose == '2':
     track_ids = get_ids()
     option = input("Choose an option: 1. BPM 2. Valence 3. Energy. \nType the number of option: ")
-    option_two(track_ids, option)
+
+    pattern = r"^[123]$"
+    match = re.match(pattern, option)
+
+    if match is not None:
+        option_two(track_ids, option)
+    else:
+        print("Invalid option. Please choose 1, 2 or 3.")
+        exit()
+else:
+    print("Invalid option. Please choose 1 or 2.")
+    exit()
 
 # elif chose == '3':
 #     option_three()
