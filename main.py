@@ -31,9 +31,13 @@ def get_ids():
         
         track_ids = [track['track']['id'] for track in tracks['items']]
 
-        return playlist_id, track_ids
+        if track_ids == [None]:
+            print("No tracks found. Please make sure playlist is not empty.")
+            exit()
+        else:
+            return track_ids
     else:
-        print("Invalid URL")
+        print("Invalid URL. Please make sure URL looks like this: https://open.spotify.com/playlist/[id]?si=[random_string]")
         exit()
     
 
@@ -76,10 +80,11 @@ def option_one(track_ids):
         except IndexError:
             print("Index error")
 
-def option_two(playlist_id, track_ids, option):
+def option_two(track_ids, option):
     
     features = []
     name_of_feature = ''
+
     if option == '1':
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
@@ -90,13 +95,13 @@ def option_two(playlist_id, track_ids, option):
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
             features.append(audio_features['valence'])
-        name_of_feature = 'Valence'
+        name_of_feature = 'valence'
 
     if option == '3':
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
             features.append(audio_features['energy'])
-        name_of_feature = 'Energy'
+        name_of_feature = 'energy'
     
     color = get_dominant_color(user_info['images'][0]['url'])
 
@@ -128,13 +133,13 @@ def get_dominant_color(url):
     return color
 
 if chose == '1':
-    playlist_id, track_ids = get_ids()
+    track_ids = get_ids()
     option_one(track_ids)
 
 elif chose == '2':
-    playlist_id, track_ids = get_ids()
+    track_ids = get_ids()
     option = input("Choose an option: 1. BPM 2. Valence 3. Energy. \nType the number of option: ")
-    option_two(playlist_id, track_ids, option)
+    option_two(track_ids, option)
 
 # elif chose == '3':
 #     option_three()
