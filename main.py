@@ -90,6 +90,7 @@ def option_two(playlist_id, track_ids, option):
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
             features.append(round(audio_features['tempo']))
+            print(audio_features['tempo'])
         name_of_feature = 'BPM'
         print("""The overall estimated tempo of a track in beats per minute (BPM). 
         In musical terminology, tempo is the speed or pace of a given piece and derives directly 
@@ -122,12 +123,12 @@ def option_two(playlist_id, track_ids, option):
     colors = get_dominant_colors(image_url)
     
     if option == '1':
-        bins = range(min(features), max(features), 1)
+        bins = range(min(features), max(features) + 2)
 
         for i in range(len(bins)-1):
             plt.hist([f for f in features if bins[i] <= f < bins[i+1]], bins=[bins[i], bins[i+1]], color=colors[i%len(colors)], edgecolor='black')
     else:
-        bins = np.arange(min(features), max(features), 0.1)
+        bins = np.arange(min(features), max(features)+ 0.2, 0.1)
 
         for i in range(len(bins)-1):
             plt.hist(features, bins=bins[i:i+2], color=colors[i%len(colors)], edgecolor='black')
