@@ -4,6 +4,7 @@ from config import s_client_id, s_client_secret, redirect_uri, playlist_urll
 from lyrics_sentiment import get_playlist, get_most_popular, get_playlist_recommendations, recommendation_final_playlist
 import matplotlib.pyplot as plt
 import re
+import numpy as np
 
 scope = 'playlist-read-private playlist-modify-public'
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=s_client_id, client_secret=s_client_secret, redirect_uri=redirect_uri, scope=scope))
@@ -114,7 +115,7 @@ def option_two(playlist_id, track_ids, option):
         features contributing to this attribute include dynamic range, perceived loudness, timbre, 
         onset rate, and general entropy""")
 
-    import numpy as np
+    
 
     image_url = sp.playlist(playlist_id)['images'][0]['url']
 
@@ -142,7 +143,6 @@ def get_dominant_colors(url):
     import requests
     from io import BytesIO
     from sklearn.cluster import KMeans
-    import numpy as np
 
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
