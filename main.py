@@ -90,7 +90,6 @@ def option_two(playlist_id, track_ids, option):
         for track_id in track_ids:
             audio_features = sp.audio_features([track_id])[0]
             features.append(round(audio_features['tempo']))
-            print(audio_features['tempo'])
         name_of_feature = 'BPM'
         print("""The overall estimated tempo of a track in beats per minute (BPM). 
         In musical terminology, tempo is the speed or pace of a given piece and derives directly 
