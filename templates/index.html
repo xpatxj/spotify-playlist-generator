@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Are you happy or not?</title>
+    <title>Spotify Playlist's Analysis</title>
     <style>
         body {
             display: flex;
@@ -42,7 +42,7 @@
         .options {
             display: flex;
             justify-content: space-around; 
-            width: 30%;
+            width: 60%;
         }
         button {
             padding: 10px 20px;
@@ -60,12 +60,12 @@
             color: black;
             text-align: center; 
             max-width: 60%; 
-            margin: 0 auto; 
+            margin: 3;
         }
     </style>
 </head>
 <body>
-    <h1>Are you happy or not?</h1>
+    <h1>Spotify Playlist's Analysis</h1>
     <form method="POST">
         <input type="text" name="url" placeholder="Past your URL here..." style="height: 30px;" required>
         <div class = "chooses">
@@ -74,7 +74,7 @@
             <input type="radio" id="choose2" name="choose" value="2">
             <label for="choose2">Chart based on your favorite playlist</label>
         </div>
-
+        <input type="text" id="playlistName" name="playlistName" placeholder="Enter your playlist name here..." style="display: none;">
         <div class="options" style="display: none;">
             <input type="radio" id="option1" name="option" value="1">
             <label for="option1">BPM</label>
@@ -84,14 +84,19 @@
             <label for="option3">energy</label>
         </div>
         <div>
-            <button type="submit">Go</button>
+            <button type="submit" id="goButton">Go</button>
             <button id="info" disabled>Info</button> 
         </div>
     </form>
-    <p id="message" class="message"></p>
+    {% if message %}
+        <p class="message">{{ message }}</p>
+    {% endif %}
+
+    <!-- <p id="message" class="message"></p> -->
     {% if error %}
         <p class="error">{{ error }}</p>
     {% endif %}
+    
     {% if plot_url %}
         <img src="data:image/png;base64,{{ plot_url }}" style="margin-top: 30px;">
     {% endif %}
@@ -99,19 +104,40 @@
         var choose1 = document.getElementById('choose1');
         var choose2 = document.getElementById('choose2');
         var options = document.querySelector('.options');
+        var option1 = document.getElementById('option1');
+        var option2 = document.getElementById('option2');
+        var option3 = document.getElementById('option3');
         var form = document.getElementById('myForm');
+        var message = document.getElementById('message');
+        var goButton = document.getElementById('goButton');
+        var playlistName = document.getElementById('playlistName');
+
 
         choose1.addEventListener('click', function() {
-            options.style.display = "block";
-        });
+                    options.style.display = "none";
+                    playlistName.style.display = "block";
+                    playlistName.required = true;
+            });
 
         choose2.addEventListener('click', function() {
-            options.style.display = "none";
+            playlistName.required = false;
+            playlistName.style.display = "none";
+            options.style.display = "block";
+            option1.addEventListener('click', function() {
+                message.innerText = "The overall estimated tempo of a track in beats per minute (BPM).\nIn musical terminology, tempo is the speed or pace of a given piece and derives directly\nfrom the average beat duration."
+                });
+            option2.addEventListener('click', function() {
+                message.innerText = "Valence is a measure describing the musical positiveness conveyed by a track.\nTracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with\nlow valence sound more negative (e.g. sad, depressed, angry)"
+                });
+            option3.addEventListener('click', function() {
+                message.innerText = "Energy is a measure that represents a perceptual measure of intensity\nand activity. Typically, energetic tracks feel fast, loud, and noisy. For example,\ndeath metal has high energy, while a Bach prelude scores low on the scale. Perceptual\nfeatures contributing to this attribute include dynamic range, perceived loudness, timbre,\nonset rate, and general entropy"
+                });
         });
-
+        
         form.addEventListener('submit', function(event) {
             if (choose1.checked) {
                 options.style.display = "block";
+                
             } else {
                 options.style.display = "none";
             }
