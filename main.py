@@ -12,7 +12,6 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=s_client_id, client_sec
 user_info = sp.current_user()
 user_id = user_info['id']
 
-# playlist_urll = input("Please enter URL of playlist: ")
 choice = input("""Choose an option: 
             1. 10 new tracks recommendation based on playlist's songs' lyrics' sentiment analysis.
             2. Chart based on your playlist: BPM, velance, energy.\n""")
@@ -50,10 +49,8 @@ def option_one(track_ids):
         artists = ', '.join([artist['name'] for artist in track['artists']])
         tracks_info[track['name']] = artists
 
-    # print(tracks_info)
     get_playlist(tracks_info)
     get_most_popular()
-    # print(get_most_popular())
 
     seed_tracks = track_ids[:5]
     recommendations = sp.recommendations(seed_tracks=seed_tracks, limit=30)
@@ -66,8 +63,6 @@ def option_one(track_ids):
         recommendations_info[track['name']] = artists
 
     get_playlist_recommendations(recommendations_info, sp)
-    # print(recommendations_info)
-    # print(recommendation_final_playlist)
 
     name = input("Please enter name of playlist: ")
     new_playlist = sp.user_playlist_create(user=user_id, name=name, public=True, description='recommended songs based on playlist')
