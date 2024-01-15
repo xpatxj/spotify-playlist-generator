@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Are you happy or not?</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            padding-top: 50px; 
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 30px; 
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 60%;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px; 
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .chooses {
+            display: flex;
+            justify-content: space-around; 
+            width: 60%;
+        }
+        .options {
+            display: flex;
+            justify-content: space-around; 
+            width: 30%;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #1DB954;
+            color: #fff;
+            cursor: pointer;
+            align-self: center;
+        }
+        .error {
+            color: red;
+        }
+        .message {
+            color: black;
+            text-align: center; 
+            max-width: 60%; 
+            margin: 0 auto; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Are you happy or not?</h1>
+    <form method="POST">
+        <input type="text" name="url" placeholder="Past your URL here..." style="height: 30px;" required>
+        <div class = "chooses">
+            <input type="radio" id="choose1" name="choose" value="1">
+            <label for="choose1">New playlist based on your humor</label>
+            <input type="radio" id="choose2" name="choose" value="2">
+            <label for="choose2">Chart based on your favorite playlist</label>
+        </div>
+
+        <div class="options" style="display: none;">
+            <input type="radio" id="option1" name="option" value="1">
+            <label for="option1">BPM</label>
+            <input type="radio" id="option2" name="option" value="2">
+            <label for="option2">valence</label>
+            <input type="radio" id="option3" name="option" value="3">
+            <label for="option3">energy</label>
+        </div>
+        <div>
+            <button type="submit">Go</button>
+            <button id="info" disabled>Info</button> 
+        </div>
+    </form>
+    <p id="message" class="message"></p>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    {% if plot_url %}
+        <img src="data:image/png;base64,{{ plot_url }}" style="margin-top: 30px;">
+    {% endif %}
+    <script>
+        var choose1 = document.getElementById('choose1');
+        var choose2 = document.getElementById('choose2');
+        var options = document.querySelector('.options');
+        var form = document.getElementById('myForm');
+
+        choose1.addEventListener('click', function() {
+            options.style.display = "block";
+        });
+
+        choose2.addEventListener('click', function() {
+            options.style.display = "none";
+        });
+
+        form.addEventListener('submit', function(event) {
+            if (choose1.checked) {
+                options.style.display = "block";
+            } else {
+                options.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
