@@ -21,11 +21,6 @@ user_id = user_info['id']
 
 app = Flask(__name__)
 
-# def is_valid_spotify_url(url):
-#     pattern = r"https://open\.spotify\.com/playlist/[a-zA-Z0-9]+(\?si=[a-zA-Z0-9]+)?"
-#     match = re.match(pattern, url)
-#     return match is not None
-
 def get_dominant_colors(url):
 
         from PIL import Image
@@ -102,6 +97,7 @@ def index():
                         
                         track_id = search['tracks']['items'][0]['id']
                         sp.playlist_add_items(playlist_id=new_playlist['id'], items=[track_id])
+                    error = 'Playlist created successfully!'
                 except IndexError:
                     error = 'Something went wrong. Please try again later.'
                 except Timeout:
