@@ -17,61 +17,75 @@ recommendation_final_playlist = {}
 c = []
 
 
-def analyze_sentiment(name, artist):
-    try:
-        lyrics = genius.search_song(name, artist).lyrics
-        detected_language = detect(lyrics)
-
-        if detected_language != 'en':
-            lyrics = GoogleTranslator(source=detected_language, target='english').translate(lyrics)
-
-        headers = headers
-
-        url ="https://api.edenai.run/v2/text/sentiment_analysis"
-        payload={
-            "show_original_response": False,
-            "fallback_providers": "",
-            "providers": "google,amazon",
-            'language': "en",
-            'text': lyrics
-        }
-
-        response = requests.post(url, json=payload, headers=headers)
-        result = json.loads(response.text)
-        items = result['google']['items']
-
-        total_sentiment_rate = 0
-        for item in items:
-            sentiment_rate = item['sentiment_rate']
-            if item['sentiment'] == 'Negative':
-                sentiment_rate = -sentiment_rate
-            else:
-                sentiment_rate = sentiment_rate
-            total_sentiment_rate += sentiment_rate
-        average_sentiment_rate = total_sentiment_rate / len(items)
-        return average_sentiment_rate
-    except AttributeError:
-        print("Attribute error")
-        pass
-    except UnboundLocalError:
-        print("Unbound local error")
-        pass
-    except KeyError:
-        print("Key error")
-        pass
-  
-# do sentiment analysis on song
 # def analyze_sentiment(name, artist):
 #     try:
 #         lyrics = genius.search_song(name, artist).lyrics
-#         blob = TextBlob(lyrics)
-#         return blob.sentiment.polarity
+#         detected_language = detect(lyrics)
+
+#         if detected_language != 'en':
+            # if len(lyrics) > 5000:
+            #     lyrics = lyrics[:5000]
+            #     lyrics = GoogleTranslator(source=detected_language, target='english').translate(lyrics)
+            # else:
+            #     lyrics = GoogleTranslator(source=detected_language, target='english').translate(lyrics)
+
+#         headers = headers
+
+#         url ="https://api.edenai.run/v2/text/sentiment_analysis"
+#         payload={
+#             "show_original_response": False,
+#             "fallback_providers": "",
+#             "providers": "google,amazon",
+#             'language': "en",
+#             'text': lyrics
+#         }
+
+#         response = requests.post(url, json=payload, headers=headers)
+#         result = json.loads(response.text)
+#         items = result['google']['items']
+#         print(items)
+
+#         total_sentiment_rate = 0
+#         for item in items:
+#             sentiment_rate = item['sentiment_rate']
+#             if item['sentiment'] == 'Negative':
+#                 sentiment_rate = -sentiment_rate
+#             else:
+#                 sentiment_rate = sentiment_rate
+#             total_sentiment_rate += sentiment_rate
+#         average_sentiment_rate = total_sentiment_rate / len(items)
+#         return average_sentiment_rate
 #     except AttributeError:
 #         print("Attribute error")
 #         pass
 #     except UnboundLocalError:
 #         print("Unbound local error")
 #         pass
+#     except KeyError:
+#         print("Key error")
+#         pass
+  
+# do sentiment analysis on song
+def analyze_sentiment(name, artist):
+    try:
+        lyrics = genius.search_song(name, artist).lyrics
+        detected_language = detect(lyrics)
+
+        if detected_language != 'en':
+            if len(lyrics) > 5000:
+                lyrics = lyrics[:5000]
+                lyrics = GoogleTranslator(source=detected_language, target='english').translate(lyrics)
+            else:
+                lyrics = GoogleTranslator(source=detected_language, target='english').translate(lyrics)
+
+        blob = TextBlob(lyrics)
+        return blob.sentiment.polarity
+    except AttributeError:
+        print("Attribute error")
+        pass
+    except UnboundLocalError:
+        print("Unbound local error")
+        pass
     
 # get playlist and do sentiment analysis on each song
 def get_playlist(list_of_songs):
@@ -92,7 +106,7 @@ def get_playlist_recommendations(list_of_songs, sp):
             break
         a = analyze_sentiment(name, artist)
         try:
-            s = round(a, 1)
+            s = round(a, 1)            
         except TypeError:
             pass
         if s is not None and (s == c[0][0] or s == c[1][0] or s == c[2][0]):
