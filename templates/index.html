@@ -70,7 +70,7 @@
         <input type="text" name="url" placeholder="Past your URL here..." style="height: 30px;" required>
         <div class = "chooses">
             <input type="radio" id="choose1" name="choose" value="1">
-            <label for="choose1">10 new tracks recommendation based on playlist's songs' lyrics' sentiment analysisr</label>
+            <label for="choose1">10 new tracks recommendation based on playlist's songs' lyrics' sentiment analysist</label>
             <input type="radio" id="choose2" name="choose" value="2">
             <label for="choose2">Chart based on your playlist: BPM, velance, energy.</label>
         </div>
@@ -85,14 +85,10 @@
         </div>
         <div>
             <button type="submit" id="goButton">Go</button>
-            <button id="info" disabled>Info</button> 
+            <button type="button" id="info">Info</button> 
         </div>
     </form>
-    {% if message %}
-        <p class="message">{{ message }}</p>
-    {% endif %}
-
-    <!-- <p id="message" class="message"></p> -->
+    <p id="message" class="message"></p>
     {% if error %}
         <p class="error">{{ error }}</p>
     {% endif %}
@@ -107,11 +103,9 @@
         var option1 = document.getElementById('option1');
         var option2 = document.getElementById('option2');
         var option3 = document.getElementById('option3');
-        var form = document.getElementById('myForm');
         var message = document.getElementById('message');
-        var goButton = document.getElementById('goButton');
         var playlistName = document.getElementById('playlistName');
-
+        var info = document.getElementById('info');
 
         choose1.addEventListener('click', function() {
                     options.style.display = "none";
@@ -134,13 +128,9 @@
                 });
         });
         
-        form.addEventListener('submit', function(event) {
-            if (choose1.checked) {
-                options.style.display = "block";
-                
-            } else {
-                options.style.display = "none";
-            }
+        info.addEventListener('click', function(event) {
+            event.preventDefault();
+            message.innerText = "How to use?\n1. Provide a URL to the playlist. Make sure it is a link to the Spotify playlist. You don't need to make it public.\n2. Select one of the two options: Option one is 10 new tracks recommendation based on playlist's songs' lyrics' sentiment analysis, and option two is a graph with one of three selected values: BPM, valence or energy. Click on these options to find out more.\nAlso find out more about sentiment analysis: https://aws.amazon.com/what-is/sentiment-analysis/ \nIt can take a long time for a playlist or chart to make itself. Don't worry about it or refresh the page. \nYou may also get an error about trying later, this is a result of the limitations of using the API. ";
         });
     </script>
 </body>

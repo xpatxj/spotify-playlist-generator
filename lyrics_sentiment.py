@@ -1,25 +1,70 @@
 from textblob import TextBlob
 import lyricsgenius
+from langdetect import detect
 from deep_translator import GoogleTranslator
+from config import headers
 
 from collections import Counter
 from config import g_access_token
+
+import json
+import requests
 
 genius = lyricsgenius.Genius('g_access_token')
 
 sentiments = []
 recommendation_final_playlist = {}
 c = []
+
+
+def analyze_sentiment(name, artist):
+    try:
+        lyrics = genius.search_song(name, artist).lyrics
+        detected_language = detect(lyrics)
+
+        if detected_language != 'en':
+            lyrics = GoogleTranslator(source=detected_language, target='english').translate(lyrics)
+
+        headers = headers
+
+        url ="https://api.edenai.run/v2/text/sentiment_analysis"
+        payload={
+            "show_original_response": False,
+            "fallback_providers": "",
+            "providers": "google,amazon",
+            'language': "en",
+            'text': lyrics
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+        result = json.loads(response.text)
+        items = result['google']['items']
+
+        total_sentiment_rate = 0
+        for item in items:
+            sentiment_rate = item['sentiment_rate']
+            if item['sentiment'] == 'Negative':
+                sentiment_rate = -sentiment_rate
+            else:
+                sentiment_rate = sentiment_rate
+            total_sentiment_rate += sentiment_rate
+        average_sentiment_rate = total_sentiment_rate / len(items)
+        return average_sentiment_rate
+    except AttributeError:
+        print("Attribute error")
+        pass
+    except UnboundLocalError:
+        print("Unbound local error")
+        pass
+    except KeyError:
+        print("Key error")
+        pass
+  
 # do sentiment analysis on song
 # def analyze_sentiment(name, artist):
 #     try:
 #         lyrics = genius.search_song(name, artist).lyrics
-#         is_english = GoogleTranslator.detect(lyrics)
-#         if is_english != 'english':
-#             t_lyrics = GoogleTranslator(source='auto', target='english').translate(lyrics)
-#             blob = TextBlob(t_lyrics)
-#         else:
-#             blob = TextBlob(lyrics)
+#         blob = TextBlob(lyrics)
 #         return blob.sentiment.polarity
 #     except AttributeError:
 #         print("Attribute error")
@@ -27,17 +72,6 @@ c = []
 #     except UnboundLocalError:
 #         print("Unbound local error")
 #         pass
-def analyze_sentiment(name, artist):
-    try:
-        lyrics = genius.search_song(name, artist).lyrics
-        blob = TextBlob(lyrics)
-        return blob.sentiment.polarity
-    except AttributeError:
-        print("Attribute error")
-        pass
-    except UnboundLocalError:
-        print("Unbound local error")
-        pass
     
 # get playlist and do sentiment analysis on each song
 def get_playlist(list_of_songs):
