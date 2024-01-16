@@ -76,11 +76,11 @@
         </div>
         <input type="text" id="playlistName" name="playlistName" placeholder="Enter your playlist name here..." style="display: none;">
         <div class="options" style="display: none;">
-            <input type="radio" id="option1" name="option" value="1">
+            <input type="radio" id="option1" name="option" value="1" required>
             <label for="option1">BPM</label>
-            <input type="radio" id="option2" name="option" value="2">
+            <input type="radio" id="option2" name="option" value="2" required>
             <label for="option2">valence</label>
-            <input type="radio" id="option3" name="option" value="3">
+            <input type="radio" id="option3" name="option" value="3" required>
             <label for="option3">energy</label>
         </div>
         <div>
@@ -111,6 +111,9 @@
                     options.style.display = "none";
                     playlistName.style.display = "block";
                     playlistName.required = true;
+                    option1.required = false;
+                    option2.required = false;
+                    option3.required = false;
             });
 
         choose2.addEventListener('click', function() {
