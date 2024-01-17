@@ -67,17 +67,18 @@ def index():
             if track_ids == [None]:
                 error = 'No tracks found. Please make sure playlist is not empty.'
             if choice == '1':
-                tracks_info = {}
-                for track_id in track_ids:
-                    track = sp.track(track_id)
-                    artists = ', '.join([artist['name'] for artist in track['artists']])
-                    tracks_info[track['name']] = artists
-
-                get_playlist(tracks_info)
-                get_most_popular()
-
-                seed_tracks = track_ids[:5]
                 try:
+                    tracks_info = {}
+                    for track_id in track_ids:
+                        track = sp.track(track_id)
+                        artists = ', '.join([artist['name'] for artist in track['artists']])
+                        tracks_info[track['name']] = artists
+
+                    get_playlist(tracks_info)
+                    get_most_popular()
+
+                    seed_tracks = track_ids[:5]
+                
                     recommendations = sp.recommendations(seed_tracks=seed_tracks, limit=30)
 
                     recommendations_ids = [track['id'] for track in recommendations['tracks']]
@@ -102,6 +103,8 @@ def index():
                     error = 'Something went wrong. Please try again later.'
                 except Timeout:
                     error = 'Request timed out. Please try again later.'
+                except spotipy.SpotifyException:
+                    error = 'Something went wrong. Please try again later.'
 
             
             elif choice == '2':
@@ -149,7 +152,6 @@ def index():
 
                 plt.xlabel(name_of_feature)
                 plt.ylabel('count')
-                energies.clear()
                 img = io.BytesIO()
                 plt.savefig(img, format='png')
                 img.seek(0)
