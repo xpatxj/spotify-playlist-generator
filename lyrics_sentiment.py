@@ -1,12 +1,12 @@
-from textblob import TextBlob
+from textblob import TextBlob 
 import lyricsgenius
 from langdetect import detect
 from deep_translator import GoogleTranslator
 from config import headers
+import deep_translator
 
 from collections import Counter
-from config import g_access_token
-
+from config import g_access_token 
 import json
 import requests
 
@@ -64,6 +64,9 @@ c = []
 #     except KeyError:
 #         print("Key error")
 #         pass
+#     except GoogleTranslator.exceptions.NotValidLengthError:
+#         print("Not valid payload error")
+#         pass
   
 # do sentiment analysis on song
 def analyze_sentiment(name, artist):
@@ -73,18 +76,22 @@ def analyze_sentiment(name, artist):
 
         if detected_language != 'en':
             if len(lyrics) > 5000:
-                lyrics = lyrics[:5000]
+                lyrics = lyrics[:4999]
                 lyrics = GoogleTranslator(source=detected_language, target='english').translate(lyrics)
             else:
                 lyrics = GoogleTranslator(source=detected_language, target='english').translate(lyrics)
 
         blob = TextBlob(lyrics)
+        print(blob.sentiment.polarity)
         return blob.sentiment.polarity
     except AttributeError:
         print("Attribute error")
         pass
     except UnboundLocalError:
         print("Unbound local error")
+        pass
+    except deep_translator.exceptions.NotValidLengthError:
+        print("Not valid payload error")
         pass
     
 # get playlist and do sentiment analysis on each song
@@ -97,31 +104,31 @@ def get_playlist(list_of_songs):
         
     return sentiments
 
-
 # give recommendations based on sentiment analysis
 def get_playlist_recommendations(list_of_songs, sp):
     c = get_most_popular()
     for name, artist in list_of_songs.items():
         if len(recommendation_final_playlist) == 10:
             break
-        a = analyze_sentiment(name, artist)
-        try:
-            s = round(a, 1)            
-        except TypeError:
-            pass
-        if s is not None and (s == c[0][0] or s == c[1][0] or s == c[2][0]):
-            search = sp.search(q='track:' + name + ' artist:' + artist, type='track')
-            try:
-                search['tracks']['items'][0]['id']
-                recommendation_final_playlist[name] = artist
-                print(s)
-                print(len(recommendation_final_playlist))
-            except IndexError:
-                pass
-        elif len(recommendation_final_playlist) == 10:
-            break
         else:
-            pass
+            a = analyze_sentiment(name, artist)
+            try:
+                s = round(a, 1)            
+            except TypeError:
+                pass
+            if s is not None and (s == c[0][0] or s == c[1][0] or s == c[2][0]):
+                search = sp.search(q='track:' + name + ' artist:' + artist, type='track')
+                try:
+                    search['tracks']['items'][0]['id']
+                    recommendation_final_playlist[name] = artist
+                    print(s)
+                    print(len(recommendation_final_playlist))
+                except IndexError:
+                    pass
+            elif len(recommendation_final_playlist) == 10:
+                break
+            else:
+                pass
         
     return recommendation_final_playlist
 
