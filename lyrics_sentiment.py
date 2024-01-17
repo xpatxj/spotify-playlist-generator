@@ -107,6 +107,7 @@ def get_playlist(list_of_songs):
 # give recommendations based on sentiment analysis
 def get_playlist_recommendations(list_of_songs, sp):
     c = get_most_popular()
+    s = None
     for name, artist in list_of_songs.items():
         if len(recommendation_final_playlist) == 10:
             break
